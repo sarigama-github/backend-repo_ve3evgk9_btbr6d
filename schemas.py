@@ -11,8 +11,9 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from typing import Optional
+from datetime import date
 
 # Example schemas (replace with your own):
 
@@ -22,7 +23,7 @@ class User(BaseModel):
     Collection name: "user" (lowercase of class name)
     """
     name: str = Field(..., description="Full name")
-    email: str = Field(..., description="Email address")
+    email: EmailStr = Field(..., description="Email address")
     address: str = Field(..., description="Address")
     age: Optional[int] = Field(None, ge=0, le=120, description="Age in years")
     is_active: bool = Field(True, description="Whether user is active")
@@ -37,6 +38,33 @@ class Product(BaseModel):
     price: float = Field(..., ge=0, description="Price in dollars")
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
+
+# Green Future Initiative Collections
+
+class Volunteer(BaseModel):
+    """Collection name: volunteer"""
+    full_name: str = Field(..., min_length=2)
+    email: EmailStr
+    phone: Optional[str] = Field(None, description="Contact number")
+    city: Optional[str] = None
+    availability: Optional[str] = Field(None, description="e.g., weekends, weekdays")
+    interests: Optional[str] = Field(None, description="Areas of interest like cleanups, biogas, farming")
+
+class ContactMessage(BaseModel):
+    """Collection name: contactmessage"""
+    name: str = Field(..., min_length=2)
+    email: EmailStr
+    subject: str = Field(..., min_length=2)
+    message: str = Field(..., min_length=5, max_length=2000)
+
+class DonationPledge(BaseModel):
+    """Collection name: donationpledge"""
+    name: str = Field(...)
+    email: EmailStr
+    amount: float = Field(..., ge=1)
+    message: Optional[str] = None
+    recurring: bool = False
+    date_intended: Optional[date] = None
 
 # Add your own schemas here:
 # --------------------------------------------------
